@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/David-Sat/skilldesk/compare/skilldesk-v0.2.0...skilldesk-v0.2.1) (2026-10-28)
+
+
+### Bug Fixes
+
+* **deps:** patch zod and body-parser security advisories ([a1d3574](https://github.com/David-Sat/skilldesk/commit/a1d3574a096070c77612064f40b4cb327a0f94f7))
+
 ## [0.2.0](https://github.com/David-Sat/skilldesk/compare/skilldesk-v0.1.0...skilldesk-v0.2.0) (2026-10-23)
 
 
