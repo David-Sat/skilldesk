@@ -7,34 +7,33 @@ import type { HarnessId } from '@skill-hub/core';
 
 export const SKILL_CONTENT = `---
 name: skilldesk
-description: Unified Skill & MCP Manager for AI Coding Agents. Use when the user asks to inspect installed skills, audit context token weights, review MCP servers, or check for updates. Also triggered by /skills or /skilldesk.
+description: Skill & MCP Manager for AI Coding Agents. Use when the user asks to inspect installed skills, manage MCP servers, or check prompt token weights. Also triggered by /skills or /skilldesk.
 ---
 
-# SkillDesk - Unified Skill & MCP Manager
+# SkillDesk: Skill & MCP Manager
 
-SkillDesk provides cross-harness visibility and management for all your AI coding agent skills and MCP servers.
+SkillDesk manages skills and MCP servers across installed agent harnesses (Google Antigravity, Claude Code, Cursor, Windsurf, Cline, Roo Code, Claude Desktop).
 
 ## Workflow
 
-When the user asks to inspect skills, check MCPs, audit prompt token costs, or runs \`/skills\` or \`/skilldesk\`:
-
-### 1. Perform a quick audit
-Call \`skilldesk_audit\` (or \`skill_hub_audit\`) to inspect installed skills, token metrics, and pending updates:
-\`\`\`json
-{
-  "name": "skilldesk_audit"
-}
-\`\`\`
-
-### 2. Launch the visual web dashboard
-When the user wants to visually explore skills, read instructions, inspect bundled files, or click to update MCPs:
+### 1. Default Action: Launch the Dashboard
+When the user runs \`/skills\`, \`/skilldesk\`, or asks to open or inspect their skills:
+Call \`skilldesk_launch_ui\` (or \`skill_hub_launch_ui\`) to open the local web interface:
 \`\`\`json
 {
   "name": "skilldesk_launch_ui"
 }
 \`\`\`
-Tell the user:
-"I opened your SkillDesk dashboard at http://127.0.0.1:4350. You can inspect all installed skills, read instructions, view token gauges, and 1-click update outdated MCPs."
+Inform the user that the SkillDesk dashboard is open at http://127.0.0.1:4350.
+
+### 2. In-Chat Audit (Only When Explicitly Requested)
+Only call \`skilldesk_audit\` if the user specifically asks for an in-chat audit, prompt token breakdown, or text summary (e.g., "audit my skills", "which skills are heavy?"):
+\`\`\`json
+{
+  "name": "skilldesk_audit"
+}
+\`\`\`
+Provide a concise summary of active harnesses, total skills/MCPs, oversized skills, and pending updates.
 `;
 
 export const PLUGIN_MANIFEST = {

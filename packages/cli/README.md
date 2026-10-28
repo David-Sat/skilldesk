@@ -1,58 +1,61 @@
 # (ノ^_^)ノ┻━┻ SkillDesk
 
-Unified Skill & MCP Manager for AI Coding Agents.
+Skill & MCP manager for AI coding agents.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-38bdf8.svg)](https://modelcontextprotocol.io)
-[![Privacy](https://img.shields.io/badge/Privacy-100%25%20Local%20%7C%20Zero%20Telemetry-purple.svg)](./PRIVACY.md)
 
-> [!NOTE]
-> **Security & Privacy Guarantee**: `skilldesk` runs **100% locally** on `127.0.0.1` and communicates with coding agents via standard `stdio` (MCP). There is **zero telemetry**, no tracking pixels, and no remote analytics. Registry checks are unauthenticated read-only calls directly to public NPM, PyPI, and GitHub APIs. Audited in [PRIVACY.md](./PRIVACY.md) and [SECURITY.md](./SECURITY.md).
+SkillDesk scans installed coding agents across your machine to inspect active skills and MCP servers, profile prompt token consumption, and manage updates.
 
-SkillDesk scans all installed coding agent harnesses across your machine—showing what skills and MCP servers are active, profiling their startup context window token footprint, inspecting bundled helper scripts, safely removing unused skills with automated backups, and letting you 1-click update outdated MCP packages.
+Runs entirely locally on `127.0.0.1` with zero telemetry. Configuration changes create automatic backups in `~/.skilldesk/backups/`.
 
 ---
 
 ## Quickstart
 
-| Method | Command | Purpose |
-| --- | --- | --- |
-| **Instant Dashboard** | `npx skilldesk` | Launch local web dashboard at `http://127.0.0.1:4350` |
-| **Terminal Audit** | `npx skilldesk audit` | Fast terminal ASCII overview of active harnesses & tokens |
-| **In Agent** | `/skills` | In-chat audit & dashboard trigger |
-| **Global Setup** | `npm i -g skilldesk && skilldesk init -g` | Interactive setup for Antigravity, Claude Code, Cursor, Windsurf |
+```bash
+# Launch the dashboard in your browser (http://127.0.0.1:4350)
+npx skilldesk
 
-*(Both `skilldesk` and `skill-desk` command invocations are supported)*
+# Optional: Run a terminal audit without opening the browser
+npx skilldesk audit
+```
 
----
-
-## Core Capabilities
-
-* **Cross-Harness Discovery**: Detects active skills and MCP servers across Antigravity, Claude Code, Cursor, and Windsurf in one unified view.
-* **Turn-0 Context Profiler**: Measures startup token overhead and flags heavyweight skill descriptions before they bloat agent context.
-* **Safe Skill Removal**: Removes unwanted skills with automated, timestamped safety backups.
-* **1-Click MCP Updates**: Scans NPM, PyPI, and GitHub registries to upgrade outdated server configs.
-* **In-Agent Tooling**: Native MCP tools and in-chat slash commands directly inside your AI coding sessions.
+*(Both `skilldesk` and `skill-desk` command names are supported.)*
 
 ---
 
-## System Architecture
+## Features
+
+- **Cross-Agent Visibility**: Inspect installed skills and MCP servers across Google Antigravity, Claude Code, Cursor, and Windsurf in a unified view.
+- **Context Token Profiling**: Measure startup token consumption for each skill to catch overly verbose prompt instructions before they bloat your context window.
+- **MCP Version Checks**: Check configured MCP packages against npm, PyPI, and GitHub registries, with one-click version bumps.
+- **Safe Modifications**: Delete unused skills or modify configs with automated, timestamped backups saved locally.
+- **In-Agent Integration**: Run `skilldesk mcp` to let agents open the dashboard or check skills directly from chat.
+
+---
+
+## Architecture
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│                         SKILLDESK                           │
-├──────────────────────────────┬──────────────────────────────┤
-│ CLI / AGENT ENTRY            │ EMBEDDED PREACT DASHBOARD    │
-│ • Terminal: npx skilldesk    │ • 127.0.0.1:4350 (28 KB JS)  │
-│ • In-Agent: /skills          │ • Token gauges & File tree   │
-│ • MCP stdio: skilldesk mcp   │ • 1-Click Update triggers    │
-├──────────────────────────────┴──────────────────────────────┤
-│ LOCAL CORE ENGINE (Node / TypeScript)                       │
-│ ├── scanner:  Cross-platform harness & config discovery     │
-│ ├── profiler: BPE token weighting & asset classification    │
-│ ├── updater:  Concurrent NPM/PyPI/GitHub version checks     │
-│ └── server:   Zero-dependency local HTTP server             │
-└─────────────────────────────────────────────────────────────┘
+  Coding Agents                                          Package Registries
+  Antigravity · Claude Code · Cursor · Windsurf           npm · PyPI · GitHub
+              │                                                   ▲
+              ▼                                                   │
+  ┌───────────────────────────────────────────────────────────────────────┐
+  │ SkillDesk Core                                                        │
+  │                                                                       │
+  │   • Scanner          Discovers active configs and installed skills    │
+  │   • Token Profiler   Estimates prompt weight and flags bloat          │
+  │   • Version Checker  Queries upstream registries for package updates  │
+  │   • Local HTTP API   Lightweight local server on 127.0.0.1:4350       │
+  │   • Safety Store     Automated backups in ~/.skilldesk/backups/       │
+  └───────────────────────────────────┬───────────────────────────────────┘
+                                      │
+                         ┌────────────┴────────────┐
+                         ▼                         ▼
+                  Web Dashboard              Terminal CLI
+                 127.0.0.1:4350              npx skilldesk
 ```
 
 ---
